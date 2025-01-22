@@ -1,0 +1,94 @@
+ersion: '3.8'
+
+services:
+
+  nifi:
+    image: apache/nifi:1.28.1
+    container_name: nifi-dp1
+    restart: always
+    ports:
+      - "8443:8443"  # Puerto HTTPS de NiFi
+    environment:
+      - SINGLE_USER_CREDENTIALS_USERNAME=admin
+      - SINGLE_USER_CREDENTIALS_PASSWORD=ctsBtRBKHRAx69EqUghvvgEvjnaLjFEB
+    volumes:
+      - ./data:/tmp/data
+    user: "0:0"
+    networks:
+      - dp1_network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo-dp1
+    restart: always
+    ports:
+      - "27017:27017"  # Puerto de MongoDB
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - dp1_network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express-dp1
+    restart: always
+    ports:
+      - "8081:8081"  # Puerto de Mongo Express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    networks:
+      - dp1_network
+
+  postgres:
+    image: postgres:12.1
+    container_name: postgres-dp1
+    restart: unless-stopped
+    ports:
+      - "5432:5432"  # Puerto de PostgreSQL
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Welcome01
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data:/data/postgres
+    networks:
+      - dp1_network
+
+  pgadmin:
+    image: dpage/pgadmin4:4.16
+    container_name: pgadmin-dp1
+    restart: unless-stopped
+    ports:
+      - "5050:80"  # Puerto de pgAdmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/root/.pgadmin
+    networks:
+      - dp1_network
+
+  dp1:
+    build: .
+    container_name: dp1
+    depends_on:
+      - mongo
+      - postgres
+    networks:
+      - dp1_network
+
+networks:
+  dp1_network:
+    driver: bridge
+
+
+volumes:
+  mongo-data:
+  postgres-data:
+  pgadmin-data:
+  data:
