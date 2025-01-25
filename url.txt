@@ -1,0 +1,26 @@
+barrios
+https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/barris-barrios/records?select=coddistbar%2C%20nombre%2C%20geo_point_2d&limit=100
+
+cargador electirco
+https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/carregadors-vehicles-electrics-cargadores-vehiculos-electricos/records?select=distrito%2C%20count(objectid)&group_by=distrito&limit=100
+
+distritos
+https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/districtes-distritos/records?select=coddistrit%2C%20nombre&order_by=coddistrit&limit=100
+
+distritos_policiales
+https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/districtes-policials-distritos-policiales/records?select=nombre%2C%20geo_point_2d&limit=100
+
+escuelas
+difícil de hacer, ya nos lo plantearemos
+
+esperanza e vida
+https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/oe_28_esperanza_vida/records?select=distrito%2C%20valor&where=ano%3D2021&order_by=distrito&limit=100
+
+
+ "geo" : "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/barris-barrios/records?limit=100",
+    "alquiler" : "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/precio-alquiler-vivienda/records?select=codbar_coddistrit%2C%20avg(precio_2022_euros_m2)%20as%20precio_alquiler_m2&group_by=codbar_coddistrit&limit=100",
+    "compra" : "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/precio-de-compra-en-idealista/records?select=coddistbar%2C%20avg(precio_2022_euros_m2)%20as%20precio_compra_m2&group_by=coddistbar&limit=100",
+    "metro" : "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/transporte-barrios/records?select=coddistbar%2C%20count(distinct%20stop_id)%20as%20paradas_metro&where=transporte%3D%27metrovlc%27&group_by=coddistbar&limit=100",
+    "bus" : "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/transporte-barrios/records?select=coddistbar%2C%20count(distinct%20stop_id)%20as%20paradas_bus&where=transporte%3D%27emt%27&group_by=coddistbar&limit=100",
+    "vulnerabilidad" :"https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/vulnerabilidad-por-barrios/records?select=codbar%2C%20avg(ind_global)%20as%20vulnerabilildad&group_by=codbar&limit=100",
+    "hospitales" : "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/hospitales/records?select=coddistbar%2C%20count(distinct%20nombre)%20as%20hospitales&where=tipo%3D%22Hospital%22&group_by=coddistbar&limit=100"
