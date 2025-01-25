@@ -18,7 +18,7 @@ def normalizar_nombre_barrio(nombre):
     return nombre
 
 def obtener_mongo(collection_name):
-    client = MongoClient("mongodb://root:example@localhost:27017/")
+    client = MongoClient("mongodb://root:example@mongo:27017/")
     db = client["Dataproject1"]
     collection = db[collection_name]
     document = collection.find_one(sort=[("_id", -1)])

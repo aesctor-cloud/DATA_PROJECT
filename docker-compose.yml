@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   nifi:
@@ -7,13 +5,14 @@ services:
     container_name: nifi-dp1
     restart: always
     ports:
-      - "8443:8443"  # Puerto HTTPS de NiFi
+      - "8443:8443"
     environment:
       - SINGLE_USER_CREDENTIALS_USERNAME=admin
       - SINGLE_USER_CREDENTIALS_PASSWORD=ctsBtRBKHRAx69EqUghvvgEvjnaLjFEB
     volumes:
-      - ./data:/tmp/data
-    user: "0:0"
+      - ./Dataproject1-nifi.2.xml:/opt/nifi/nifi-current/conf/Dataproject1-nifi.2.xml
+      - ./load_template.sh:/opt/nifi/nifi-current/conf/load_template.sh
+    entrypoint: ["/bin/bash", "-c", "/opt/nifi/nifi-current/bin/nifi.sh start && /opt/nifi/nifi-current/conf/load_template.sh && tail -f /opt/nifi/nifi-current/logs/nifi-app.log"]
     networks:
       - dp1_network
 
@@ -44,51 +43,21 @@ services:
     networks:
       - dp1_network
 
-  postgres:
-    image: postgres:12.1
-    container_name: postgres-dp1
-    restart: unless-stopped
-    ports:
-      - "5432:5432"  # Puerto de PostgreSQL
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Welcome01
-      PGDATA: /data/postgres
-    volumes:
-      - postgres-data:/data/postgres
-    networks:
-      - dp1_network
-
-  pgadmin:
-    image: dpage/pgadmin4:4.16
-    container_name: pgadmin-dp1
-    restart: unless-stopped
-    ports:
-      - "5050:80"  # Puerto de pgAdmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - pgadmin-data:/root/.pgadmin
-    networks:
-      - dp1_network
-
   dp1:
     build: .
     container_name: dp1
     depends_on:
       - mongo
-      - postgres
+    ports:
+      - "8501:8501"  # Puerto de Streamlit
     networks:
       - dp1_network
+    volumes:
+      - ./data:/app/data  # Si necesitas persistir datos
 
 networks:
   dp1_network:
     driver: bridge
 
-
 volumes:
   mongo-data:
-  postgres-data:
-  pgadmin-data:
-  data:
