@@ -57,3 +57,5 @@ with col2:
         mapa = get_mapa(df_mapa)
 
     st.plotly_chart(mapa)
+
+st.dataframe(df_base)
