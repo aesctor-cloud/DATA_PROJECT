@@ -218,6 +218,7 @@ def get_mapa(df):
         mapbox_style="carto-positron",
         center={"lat": 39.47, "lon": -0.37},
         zoom=10,
+        height=600,
         title='Los barrios verdes son los más adaptados a tus necesidades'
     )
 
