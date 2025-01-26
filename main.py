@@ -1,7 +1,7 @@
 import streamlit as st
-from data_copy import get_data
-from data_copy import get_mapa
-from data_copy import ponderar
+from data import get_data
+from data import get_mapa
+from data import ponderar
 
 st.set_page_config(
     page_title="Encuentra tu barrio ideal",
