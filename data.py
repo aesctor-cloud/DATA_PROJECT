@@ -206,55 +206,26 @@ def get_mapa(df):
         for _, row in df.iterrows() # va fila a fila del df ignorando índices
     ]
     }
+
+    # Mapa
     # https://plotly.github.io/plotly.py-docs/generated/plotly.express.choropleth_mapbox.html#:~:text=a%20Mapbox%20map.-,Parameters,-data_frame%20(DataFrame
     mapa = px.choropleth_mapbox(
         df, # dataframe
         geojson=geojson, # geojson
         locations="id", # key para cruzar df con geojson
         featureidkey="properties.id",  # key para cruzar geojson con df
-        color="sumatorio",  # Métrica para los colores
+        color="valoración",  # Métrica para los colores
         color_continuous_scale=[(0, "azure"), (1, "seagreen")],
         hover_name="barrio",
         mapbox_style="carto-positron",
         center={"lat": 39.47, "lon": -0.37},
-        zoom=10,
-        height=600,
-        title='Los barrios verdes son los más adaptados a tus necesidades'
+        zoom=11.5,
+        height=600
     )
-
+    
+    mapa.update_layout(coloraxis_showscale=False)
+    
     return mapa
-
-def get_parques(df_base):
-    url_parques = "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/zones-jocs-infantils-zona-juegos-infantiles/records?select=barrio%2C%20count(objectid)&group_by=barrio&order_by=barrio&limit=100"
-
-    response = requests.get(url_parques)
-    parques = response.json()
-
-    df_parques = pd.DataFrame([
-        {
-            "barrio": record["barrio"],
-            "cuenta": record["count(objectid)"]
-        }
-        for record in parques["results"]
-    ])
-
-    # Normalizar los nombres de los barrios para compararlos fácilmente
-    df_base["nombre_barrio"] = df_base["barrio"].apply(normalizar_nombre_barrio)
-    df_parques["nombre_barrio"] = df_parques["barrio"].apply(normalizar_nombre_barrio)
-
-    # Realizar el merge entre los DataFrames por el nombre del barrio
-    parques_merged = pd.merge(
-        df_base[['id', 'nombre_barrio']],
-        df_parques,
-        on="nombre_barrio",
-        how="left"  # Mantener todos los barrios aunque no tengan zonas infantiles
-    )
-
-    parques_merged = parques_merged.fillna(0)
-    parques_merged = parques_merged.drop(columns=["barrio", "nombre_barrio"])
-    parques_merged = parques_merged.rename(columns={"cuenta": "parques_infantiles"})
-
-    return parques_merged
 
 def ponderar(respuestas, df_base):
     # Generamos las ponderaciones para que multiplique
@@ -285,9 +256,9 @@ def ponderar(respuestas, df_base):
                                 for factor in factores] # itera sobre la lista inicial de factores sobre la que se basa el formulario
 
     # añadimos una columna de sumatorio de todos los factores
-    df_ponderado['sumatorio'] = (df_ponderado.iloc[:, 5:12].sum(axis=1))
+    df_ponderado['valoración'] = (df_ponderado.iloc[:, 5:12].sum(axis=1))
 
     # ordenamos de manera descendente
-    df_ponderado = df_ponderado.sort_values(by='sumatorio', ascending=False)
+    df_ponderado = df_ponderado.sort_values(by='valoración', ascending=False)
 
     return df_ponderado
