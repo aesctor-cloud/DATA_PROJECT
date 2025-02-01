@@ -1,5 +1,4 @@
 services:
-
   nifi:
     image: apache/nifi:1.28.1
     container_name: nifi-dp1
@@ -10,11 +9,20 @@ services:
       - SINGLE_USER_CREDENTIALS_USERNAME=admin
       - SINGLE_USER_CREDENTIALS_PASSWORD=ctsBtRBKHRAx69EqUghvvgEvjnaLjFEB
     volumes:
-      - ./Dataproject1-nifi.2.xml:/opt/nifi/nifi-current/conf/Dataproject1-nifi.2.xml
-      - ./load_template.sh:/opt/nifi/nifi-current/conf/load_template.sh
-    entrypoint: ["/bin/bash", "-c", "/opt/nifi/nifi-current/bin/nifi.sh start && /opt/nifi/nifi-current/conf/load_template.sh && tail -f /opt/nifi/nifi-current/logs/nifi-app.log"]
+      - ./data:/tmp/data
+      - ./data/Dataproject1.xml:/opt/nifi/nifi-current/conf/Dataproject1.xml
+       - ./load_template.sh:/opt/nifi/nifi-current/conf/load_template.sh
+    user: "0:0"
+    command: >
+      sh -c "
+      cp /opt/nifi/nifi-current/conf/Dataproject1.xml /opt/nifi/nifi-current/conf/flow.xml.gz &&
+      exec /opt/nifi/nifi-current/bin/nifi.sh run
+      "
     networks:
       - dp1_network
+
+
+
 
   mongo:
     image: mongo:latest
