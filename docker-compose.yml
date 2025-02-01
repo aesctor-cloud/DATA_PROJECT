@@ -11,7 +11,8 @@ services:
       - SINGLE_USER_CREDENTIALS_USERNAME=admin
       - SINGLE_USER_CREDENTIALS_PASSWORD=ctsBtRBKHRAx69EqUghvvgEvjnaLjFEB
     volumes:
-      
+      - ./data:/tmp/data
+    networks:
       - dp1_network
 
 
