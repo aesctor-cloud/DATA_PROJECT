@@ -1,5 +1,4 @@
 services:
-
   nifi:
     build:
       context: .
@@ -12,10 +11,11 @@ services:
       - SINGLE_USER_CREDENTIALS_USERNAME=admin
       - SINGLE_USER_CREDENTIALS_PASSWORD=ctsBtRBKHRAx69EqUghvvgEvjnaLjFEB
     volumes:
-      - ./data:/tmp/data
-    user: "0:0" 
-    networks:
+      
       - dp1_network
+
+
+
 
   mongo:
     image: mongo:latest
